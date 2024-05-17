@@ -5,6 +5,13 @@ const jwt = require("jsonwebtoken");
 const knexConfig = require("../knexfile");
 const knex = require("knex")(knexConfig.development);
 
+/**
+ * @swagger
+ * tags:
+ *   name: Usuário
+ *   description: Endpoints relacionados a usuários
+ */
+
 // processa o corpo da requisição e insere os dados recebidos
 // como atributos de req.body
 usuarioApi.use(express.json());
@@ -32,6 +39,28 @@ const isAdmin = (req, res, next) => {
   }
 };
 
+/**
+ * @swagger
+ * /api/usuario:
+ *   get:
+ *     summary: Lista todos os usuários
+ *     description: Lista todos os usuários
+ *     tags: 
+ *       - Usuário
+ *     parameters:
+ *       - in: header
+ *         name: authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 usuarioApi.get("", checkToken, (req, res) => {
   knex("usuario")
     .then((dados) => {

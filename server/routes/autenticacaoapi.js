@@ -6,11 +6,45 @@ const bcrypt = require("bcryptjs");
 const knexConfig = require("../knexfile");
 const knex = require("knex")(knexConfig.development);
 
+/**
+ * @swagger
+ * tags:
+ *   name: Autenticação
+ *   description: Endpoints relacionados a autenticação
+ */
+
 // processa o corpo da requisição e insere os dados recebidos
 // como atributos de req.body
 autenticacaoApi.use(express.json());
 autenticacaoApi.use(express.urlencoded({ extended: true }));
 
+/**
+ * @swagger
+ * /api/login:
+ *   post:
+ *     summary: Login
+ *     description: Login
+ *     tags: 
+ *       - Autenticação
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               senha:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 autenticacaoApi.post("/login", (req, res) => {
   const { email, senha } = req.body;
   knex("usuario")
@@ -51,6 +85,33 @@ autenticacaoApi.post("/login", (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /api/register:
+ *   post:
+ *     summary: Register
+ *     description: Register
+ *     tags: 
+ *       - Autenticação
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               senha:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 autenticacaoApi.post("/register", (req, res) => {
   knex("usuario")
     .insert(
