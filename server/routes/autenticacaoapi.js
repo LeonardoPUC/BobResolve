@@ -18,7 +18,8 @@ autenticacaoApi.use(express.urlencoded({ extended: true }));
 
 /**
  * @swagger
- * /api/login:
+ * paths:
+ *  /api/login:
  *   post:
  *     summary: Login
  *     description: Login
@@ -78,7 +79,8 @@ autenticacaoApi.post("/login", (req, res) => {
 
 /**
  * @swagger
- * /api/register:
+ * paths:
+ *  /api/register:
  *   post:
  *     summary: Register
  *     description: Register
