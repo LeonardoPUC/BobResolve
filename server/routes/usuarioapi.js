@@ -1,9 +1,7 @@
 const express = require("express");
 const usuarioApi = express.Router();
 const jwt = require("jsonwebtoken");
-
-const knexConfig = require("../knexfile");
-const knex = require("knex")(knexConfig.development);
+const dbUsuario = require("../models/Usuario");
 
 /**
  * @swagger
@@ -62,18 +60,18 @@ const isAdmin = (req, res, next) => {
  *               type: object
  */
 usuarioApi.get("", (req, res) => {
-  knex("usuario")
-    .then((dados) => {
+  dbUsuario.find()
+    .then(dados => {
       res.json(dados);
     })
-    .catch((err) => {
+    .catch(err => {
       res.json({ message: `Erro ao obter os usuarios: ${err.message}` });
     });
 });
 
 /**
  * @swagger
- * /api/usuario:
+ * /api/usuario/{id}:
  *   get:
  *     summary: Lista um usuário
  *     description: Lista um usuário
@@ -99,12 +97,11 @@ usuarioApi.get("", (req, res) => {
  *               type: object
  */
 usuarioApi.get("/:id", checkToken, (req, res) => {
-  knex("usuario")
-    .where("id", req.params.id)
-    .then((dados) => {
+  dbUsuario.findById(req.params.id)
+    .then(dados => {
       res.json(dados);
     })
-    .catch((err) => {
+    .catch(err => {
       res.json({ message: `Erro ao obter o usuario: ${err.message}` });
     });
 });
@@ -147,17 +144,15 @@ usuarioApi.get("/:id", checkToken, (req, res) => {
  *               type: object
  */
 usuarioApi.post("", checkToken, isAdmin, (req, res) => {
-  knex("usuario")
-    .insert(req.body, "id")
-    .then((dados) => {
-      if (dados.length > 0) {
-        res.status(201).json({
-          message: "Usuario adicionado com sucesso.",
-          data: { id: dados[0].id },
-        });
-      }
+  const novoUsuario = new dbUsuario(req.body);
+  novoUsuario.save()
+    .then(dados => {
+      res.status(201).json({
+        message: "Usuario adicionado com sucesso.",
+        data: dados
+      });
     })
-    .catch((err) => {
+    .catch(err => {
       res.json({ message: `Erro ao inserir o usuario: ${err.message}` });
     });
 });
@@ -205,17 +200,14 @@ usuarioApi.post("", checkToken, isAdmin, (req, res) => {
  *               type: object
  */
 usuarioApi.put("/:id", checkToken, isAdmin, (req, res) => {
-  knex("usuario")
-    .where("id", req.params.id)
-    .update(req.body)
-    .then((dados) => {
-      if (dados) {
-        res.status(200).json({
-          message: "Usuario modificado com sucesso.",
-        });
-      }
+  dbUsuario.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    .then(dados => {
+      res.status(200).json({
+        message: "Usuario modificado com sucesso.",
+        data: dados
+      });
     })
-    .catch((err) => {
+    .catch(err => {
       res.json({ message: `Erro ao modificar o usuario: ${err.message}` });
     });
 });
@@ -247,18 +239,15 @@ usuarioApi.put("/:id", checkToken, isAdmin, (req, res) => {
  *             schema:
  *               type: object
  */
-usuarioApi.delete("/usuario/:id", checkToken, isAdmin, (req, res) => {
-  knex("usuario")
-    .where("id", req.params.id)
-    .del()
-    .then((dados) => {
-      if (dados) {
-        res.status(200).json({
-          message: "Usuario deletado com sucesso",
-        });
-      }
+usuarioApi.delete("/:id", checkToken, isAdmin, (req, res) => {
+  dbUsuario.findByIdAndDelete(req.params.id)
+    .then(dados => {
+      res.status(200).json({
+        message: "Usuario deletado com sucesso",
+        data: dados
+      });
     })
-    .catch((err) => {
+    .catch(err => {
       res.json({ message: `Erro ao deletar o usuario: ${err.message}` });
     });
 });

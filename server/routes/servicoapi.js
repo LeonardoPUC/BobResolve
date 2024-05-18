@@ -1,9 +1,7 @@
 const express = require("express");
 const servicoApi = express.Router();
 const jwt = require("jsonwebtoken");
-
-const knexConfig = require("../knexfile");
-const knex = require("knex")(knexConfig.development);
+const dbServico = require("../models/Servico");
 
 /**
  * @swagger
@@ -62,18 +60,18 @@ const isAdmin = (req, res, next) => {
  *               type: object
  */
 servicoApi.get("", checkToken, (req, res) => {
-  knex("servico")
-    .then((dados) => {
+  dbServico.find()
+    .then(dados => {
       res.json(dados);
     })
-    .catch((err) => {
+    .catch(err => {
       res.json({ message: `Erro ao obter os servicos: ${err.message}` });
     });
 });
 
 /**
  * @swagger
- * /api/servico:
+ * /api/servico/{id}:
  *   get:
  *     summary: Lista um serviço
  *     description: Lista um serviço
@@ -99,12 +97,11 @@ servicoApi.get("", checkToken, (req, res) => {
  *               type: object
  */
 servicoApi.get("/:id", checkToken, (req, res) => {
-  knex("servico")
-    .where("id", req.params.id)
-    .then((dados) => {
+  dbServico.findById(req.params.id)
+    .then(dados => {
       res.json(dados);
     })
-    .catch((err) => {
+    .catch(err => {
       res.json({ message: `Erro ao obter o servico: ${err.message}` });
     });
 });
@@ -141,17 +138,15 @@ servicoApi.get("/:id", checkToken, (req, res) => {
  *               type: object
  */
 servicoApi.post("", checkToken, isAdmin, (req, res) => {
-  knex("servico")
-    .insert(req.body, "id")
-    .then((dados) => {
-      if (dados.length > 0) {
-        res.status(201).json({
-          message: "servico adicionado com sucesso.",
-          data: { id: dados[0].id },
-        });
-      }
+  const novoServico = new dbServico(req.body);
+  novoServico.save()
+    .then(dados => {
+      res.status(201).json({
+        message: "dbServico adicionado com sucesso.",
+        data: dados
+      });
     })
-    .catch((err) => {
+    .catch(err => {
       res.json({ message: `Erro ao inserir o servico: ${err.message}` });
     });
 });
@@ -193,17 +188,14 @@ servicoApi.post("", checkToken, isAdmin, (req, res) => {
  *               type: object
  */
 servicoApi.put("/:id", checkToken, isAdmin, (req, res) => {
-  knex("servico")
-    .where("id", req.params.id)
-    .update(req.body)
-    .then((dados) => {
-      if (dados) {
-        res.status(200).json({
-          message: "servico modificado com sucesso.",
-        });
-      }
+  dbServico.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    .then(dados => {
+      res.status(200).json({
+        message: "dbServico modificado com sucesso.",
+        data: dados
+      });
     })
-    .catch((err) => {
+    .catch(err => {
       res.json({ message: `Erro ao modificar o servico: ${err.message}` });
     });
 });
@@ -235,18 +227,15 @@ servicoApi.put("/:id", checkToken, isAdmin, (req, res) => {
  *             schema:
  *               type: object
  */
-servicoApi.delete("/servico/:id", checkToken, isAdmin, (req, res) => {
-  knex("servico")
-    .where("id", req.params.id)
-    .del()
-    .then((dados) => {
-      if (dados) {
-        res.status(200).json({
-          message: "servico deletado com sucesso",
-        });
-      }
+servicoApi.delete("/:id", checkToken, isAdmin, (req, res) => {
+  dbServico.findByIdAndDelete(req.params.id)
+    .then(dados => {
+      res.status(200).json({
+        message: "dbServico deletado com sucesso",
+        data: dados
+      });
     })
-    .catch((err) => {
+    .catch(err => {
       res.json({ message: `Erro ao deletar o servico: ${err.message}` });
     });
 });

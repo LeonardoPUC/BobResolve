@@ -2,9 +2,7 @@ const express = require("express");
 const autenticacaoApi = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-
-const knexConfig = require("../knexfile");
-const knex = require("knex")(knexConfig.development);
+const dbUsuario = require("../models/Usuario");
 
 /**
  * @swagger
@@ -24,7 +22,7 @@ autenticacaoApi.use(express.urlencoded({ extended: true }));
  *   post:
  *     summary: Login
  *     description: Login
- *     tags: 
+ *     tags:
  *       - Autenticação
  *     requestBody:
  *       required: true
@@ -47,33 +45,26 @@ autenticacaoApi.use(express.urlencoded({ extended: true }));
  */
 autenticacaoApi.post("/login", (req, res) => {
   const { email, senha } = req.body;
-  knex("usuario")
-    .where({ email: email })
-    .then((dados) => {
-      if (dados.length > 0) {
-        let checkSenha = bcrypt.compareSync(senha, dados[0].senha);
-        if (checkSenha) {
-          jwt.sign(
-            { id: dados[0].id, roles: dados[0].roles },
-            process.env.SECRET_KEY,
-            { algorithm: "HS256" },
-            (err, token) => {
-              if (err)
-                res
-                  .status(500)
-                  .json({ message: `Erro ao criar token: ${err.message}` });
-              else
-                res
-                  .status(200)
-                  .json({
-                    message: "Autenticação realizada com sucesso",
-                    token: token,
-                  });
-            }
-          );
-        } else {
-          res.status(401).json({ message: "Usuário ou senha inválidos." });
-        }
+  dbUsuario
+    .findOne({ email: email })
+    .then((user) => {
+      if (user && bcrypt.compareSync(senha, user.senha)) {
+        jwt.sign(
+          { id: user._id, roles: user.roles },
+          process.env.SECRET_KEY,
+          { algorithm: "HS256" },
+          (err, token) => {
+            if (err)
+              res
+                .status(500)
+                .json({ message: `Erro ao criar token: ${err.message}` });
+            else
+              res.status(200).json({
+                message: "Autenticação realizada com sucesso",
+                token: token,
+              });
+          }
+        );
       } else {
         res.status(401).json({ message: "Usuário ou senha inválidos." });
       }
@@ -91,7 +82,7 @@ autenticacaoApi.post("/login", (req, res) => {
  *   post:
  *     summary: Register
  *     description: Register
- *     tags: 
+ *     tags:
  *       - Autenticação
  *     requestBody:
  *       required: true
@@ -113,25 +104,23 @@ autenticacaoApi.post("/login", (req, res) => {
  *               type: object
  */
 autenticacaoApi.post("/register", (req, res) => {
-  knex("usuario")
-    .insert(
-      {
-        nome: req.body.nome,
-        email: req.body.email,
-        senha: bcrypt.hashSync(req.body.senha, 8),
-      },
-      ["id"]
-    )
-    .then((result) => {
-      let usuario = result[0];
+  const newUser = new dbUsuario({
+    nome: req.body.nome,
+    email: req.body.email,
+    senha: bcrypt.hashSync(req.body.senha, 8),
+  });
+
+  newUser
+    .save()
+    .then((user) => {
       res
         .status(200)
-        .json({ id: usuario.id, message: "Cadastro realizado com sucesso." });
+        .json({ id: user._id, message: "Cadastro realizado com sucesso." });
     })
     .catch((err) => {
-      res.status(500).json({
-        message: "Erro ao registrar usuario - " + err.message,
-      });
+      res
+        .status(500)
+        .json({ message: `Erro ao registrar usuário: ${err.message}` });
     });
 });
 
