@@ -17,9 +17,11 @@ mongoose
 const swaggerSetup = require("./swagger");
 const autenticacaoApi = require("./routes/autenticacaoapi");
 const usuarioApi = require("./routes/usuarioapi");
+const servicoApi = require("./routes/servicoapi"); 
 
 app.use("/api/", autenticacaoApi);
 app.use("/api/usuario", usuarioApi);
+app.use("/api/servico", servicoApi); 
 
 // Configuração do Swagger
 swaggerSetup(app);
