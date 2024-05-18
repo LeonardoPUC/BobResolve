@@ -61,7 +61,7 @@ const isAdmin = (req, res, next) => {
  *             schema:
  *               type: object
  */
-usuarioApi.get("", checkToken, (req, res) => {
+usuarioApi.get("", (req, res) => {
   knex("usuario")
     .then((dados) => {
       res.json(dados);
