@@ -71,6 +71,33 @@ usuarioApi.get("", (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /api/usuario:
+ *   get:
+ *     summary: Lista um usuário
+ *     description: Lista um usuário
+ *     tags: 
+ *       - Usuário
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: header
+ *         name: authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 usuarioApi.get("/:id", checkToken, (req, res) => {
   knex("usuario")
     .where("id", req.params.id)
@@ -82,6 +109,43 @@ usuarioApi.get("/:id", checkToken, (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /api/usuario:
+ *   post:
+ *     summary: Insere um usuário
+ *     description: Insere um usuário
+ *     tags: 
+ *       - Usuário
+ *     parameters:
+ *       - in: header
+ *         name: authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               senha:
+ *                 type: string
+ *               roles:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 usuarioApi.post("", checkToken, isAdmin, (req, res) => {
   knex("usuario")
     .insert(req.body, "id")
@@ -98,6 +162,48 @@ usuarioApi.post("", checkToken, isAdmin, (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /api/usuario:
+ *   put:
+ *     summary: Edita um usuário
+ *     description: Edita um usuário
+ *     tags: 
+ *       - Usuário
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: header
+ *         name: authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               senha:
+ *                 type: string
+ *               roles:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 usuarioApi.put("/:id", checkToken, isAdmin, (req, res) => {
   knex("usuario")
     .where("id", req.params.id)
@@ -114,6 +220,33 @@ usuarioApi.put("/:id", checkToken, isAdmin, (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /api/usuario:
+ *   delete:
+ *     summary: Deleta um usuário
+ *     description: Deleta um usuário
+ *     tags: 
+ *       - Usuário
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: header
+ *         name: authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 usuarioApi.delete("/usuario/:id", checkToken, isAdmin, (req, res) => {
   knex("usuario")
     .where("id", req.params.id)

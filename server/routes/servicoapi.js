@@ -5,6 +5,13 @@ const jwt = require("jsonwebtoken");
 const knexConfig = require("../knexfile");
 const knex = require("knex")(knexConfig.development);
 
+/**
+ * @swagger
+ * tags:
+ *   name: Serviço
+ *   description: Endpoints relacionados a serviços
+ */
+
 // processa o corpo da requisição e insere os dados recebidos
 // como atributos de req.body
 servicoApi.use(express.json());
@@ -32,6 +39,28 @@ const isAdmin = (req, res, next) => {
   }
 };
 
+/**
+ * @swagger
+ * /api/servico:
+ *   get:
+ *     summary: Lista todos os serviços
+ *     description: Lista todos os serviços
+ *     tags: 
+ *       - Serviço
+ *     parameters:
+ *       - in: header
+ *         name: authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 servicoApi.get("", checkToken, (req, res) => {
   knex("servico")
     .then((dados) => {
@@ -42,6 +71,33 @@ servicoApi.get("", checkToken, (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /api/servico:
+ *   get:
+ *     summary: Lista um serviço
+ *     description: Lista um serviço
+ *     tags: 
+ *       - Serviço
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: header
+ *         name: authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 servicoApi.get("/:id", checkToken, (req, res) => {
   knex("servico")
     .where("id", req.params.id)
@@ -53,6 +109,37 @@ servicoApi.get("/:id", checkToken, (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /api/servico:
+ *   post:
+ *     summary: Insere um serviço
+ *     description: Insere um serviço
+ *     tags: 
+ *       - Serviço
+ *     parameters:
+ *       - in: header
+ *         name: authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               descricao:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 servicoApi.post("", checkToken, isAdmin, (req, res) => {
   knex("servico")
     .insert(req.body, "id")
@@ -69,6 +156,42 @@ servicoApi.post("", checkToken, isAdmin, (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /api/servico:
+ *   put:
+ *     summary: Edita um serviço
+ *     description: Edita um serviço
+ *     tags: 
+ *       - Serviço
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: header
+ *         name: authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               descricao:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 servicoApi.put("/:id", checkToken, isAdmin, (req, res) => {
   knex("servico")
     .where("id", req.params.id)
@@ -85,6 +208,33 @@ servicoApi.put("/:id", checkToken, isAdmin, (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /api/servico:
+ *   delete:
+ *     summary: Deleta um serviço
+ *     description: Deleta um serviço
+ *     tags: 
+ *       - Serviço
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: header
+ *         name: authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
 servicoApi.delete("/servico/:id", checkToken, isAdmin, (req, res) => {
   knex("servico")
     .where("id", req.params.id)
