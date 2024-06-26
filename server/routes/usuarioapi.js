@@ -1,7 +1,7 @@
 const express = require("express");
 const usuarioApi = express.Router();
-const jwt = require("jsonwebtoken");
 const dbUsuario = require("../models/Usuario");
+const { checkToken, isAdmin } = require("./auth");
 
 /**
  * @swagger
@@ -10,44 +10,17 @@ const dbUsuario = require("../models/Usuario");
  *   description: Endpoints relacionados a usuários
  */
 
-// processa o corpo da requisição e insere os dados recebidos
-// como atributos de req.body
-usuarioApi.use(express.json());
-usuarioApi.use(express.urlencoded({ extended: true }));
-
-const checkToken = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
-    if (err) {
-      res.status(401).json({ message: "Token inválido" });
-    } else {
-      req.id = decoded.id;
-      req.roles = decoded.roles;
-      next();
-    }
-  });
-};
-
-const isAdmin = (req, res, next) => {
-  if (req.roles.indexOf("ADMIN") >= 0) {
-    next();
-  } else {
-    res.status(403).json({ message: "Acesso negado" });
-  }
-};
-
 /**
  * @swagger
  * /api/usuario:
  *   get:
  *     summary: Lista todos os usuários
  *     description: Lista todos os usuários
- *     tags: 
+ *     tags:
  *       - Usuário
  *     parameters:
  *       - in: header
- *         name: authorization
+ *         name: token
  *         required: true
  *         schema:
  *           type: string
@@ -58,13 +31,18 @@ const isAdmin = (req, res, next) => {
  *           application/json:
  *             schema:
  *               type: object
+ *       401:
+ *         description: Token inválido
+ *     security:
+ *       - BearerAuth: []
  */
-usuarioApi.get("", (req, res) => {
-  dbUsuario.find()
-    .then(dados => {
+usuarioApi.get("", checkToken, (req, res) => {
+  dbUsuario
+    .find()
+    .then((dados) => {
       res.json(dados);
     })
-    .catch(err => {
+    .catch((err) => {
       res.json({ message: `Erro ao obter os usuarios: ${err.message}` });
     });
 });
@@ -75,7 +53,7 @@ usuarioApi.get("", (req, res) => {
  *   get:
  *     summary: Lista um usuário
  *     description: Lista um usuário
- *     tags: 
+ *     tags:
  *       - Usuário
  *     parameters:
  *       - in: path
@@ -84,7 +62,7 @@ usuarioApi.get("", (req, res) => {
  *         schema:
  *           type: string
  *       - in: header
- *         name: authorization
+ *         name: token
  *         required: true
  *         schema:
  *           type: string
@@ -97,11 +75,12 @@ usuarioApi.get("", (req, res) => {
  *               type: object
  */
 usuarioApi.get("/:id", checkToken, (req, res) => {
-  dbUsuario.findById(req.params.id)
-    .then(dados => {
+  dbUsuario
+    .findById(req.params.id)
+    .then((dados) => {
       res.json(dados);
     })
-    .catch(err => {
+    .catch((err) => {
       res.json({ message: `Erro ao obter o usuario: ${err.message}` });
     });
 });
@@ -112,11 +91,11 @@ usuarioApi.get("/:id", checkToken, (req, res) => {
  *   post:
  *     summary: Insere um usuário
  *     description: Insere um usuário
- *     tags: 
+ *     tags:
  *       - Usuário
  *     parameters:
  *       - in: header
- *         name: authorization
+ *         name: token
  *         required: true
  *         schema:
  *           type: string
@@ -145,14 +124,15 @@ usuarioApi.get("/:id", checkToken, (req, res) => {
  */
 usuarioApi.post("", checkToken, isAdmin, (req, res) => {
   const novoUsuario = new dbUsuario(req.body);
-  novoUsuario.save()
-    .then(dados => {
+  novoUsuario
+    .save()
+    .then((dados) => {
       res.status(201).json({
         message: "Usuario adicionado com sucesso.",
-        data: dados
+        data: dados,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       res.json({ message: `Erro ao inserir o usuario: ${err.message}` });
     });
 });
@@ -163,7 +143,7 @@ usuarioApi.post("", checkToken, isAdmin, (req, res) => {
  *   put:
  *     summary: Edita um usuário
  *     description: Edita um usuário
- *     tags: 
+ *     tags:
  *       - Usuário
  *     parameters:
  *       - in: path
@@ -172,7 +152,7 @@ usuarioApi.post("", checkToken, isAdmin, (req, res) => {
  *         schema:
  *           type: string
  *       - in: header
- *         name: authorization
+ *         name: token
  *         required: true
  *         schema:
  *           type: string
@@ -200,14 +180,15 @@ usuarioApi.post("", checkToken, isAdmin, (req, res) => {
  *               type: object
  */
 usuarioApi.put("/:id", checkToken, isAdmin, (req, res) => {
-  dbUsuario.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    .then(dados => {
+  dbUsuario
+    .findByIdAndUpdate(req.params.id, req.body, { new: true })
+    .then((dados) => {
       res.status(200).json({
         message: "Usuario modificado com sucesso.",
-        data: dados
+        data: dados,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       res.json({ message: `Erro ao modificar o usuario: ${err.message}` });
     });
 });
@@ -218,7 +199,7 @@ usuarioApi.put("/:id", checkToken, isAdmin, (req, res) => {
  *   delete:
  *     summary: Deleta um usuário
  *     description: Deleta um usuário
- *     tags: 
+ *     tags:
  *       - Usuário
  *     parameters:
  *       - in: path
@@ -227,7 +208,7 @@ usuarioApi.put("/:id", checkToken, isAdmin, (req, res) => {
  *         schema:
  *           type: string
  *       - in: header
- *         name: authorization
+ *         name: token
  *         required: true
  *         schema:
  *           type: string
@@ -240,14 +221,15 @@ usuarioApi.put("/:id", checkToken, isAdmin, (req, res) => {
  *               type: object
  */
 usuarioApi.delete("/:id", checkToken, isAdmin, (req, res) => {
-  dbUsuario.findByIdAndDelete(req.params.id)
-    .then(dados => {
+  dbUsuario
+    .findByIdAndDelete(req.params.id)
+    .then((dados) => {
       res.status(200).json({
         message: "Usuario deletado com sucesso",
-        data: dados
+        data: dados,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       res.json({ message: `Erro ao deletar o usuario: ${err.message}` });
     });
 });

@@ -1,7 +1,7 @@
 const express = require("express");
 const servicoApi = express.Router();
-const jwt = require("jsonwebtoken");
 const dbServico = require("../models/Servico");
+const { checkToken, isAdmin } = require("./auth");
 
 /**
  * @swagger
@@ -9,33 +9,6 @@ const dbServico = require("../models/Servico");
  *   name: Serviço
  *   description: Endpoints relacionados a serviços
  */
-
-// processa o corpo da requisição e insere os dados recebidos
-// como atributos de req.body
-servicoApi.use(express.json());
-servicoApi.use(express.urlencoded({ extended: true }));
-
-const checkToken = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
-    if (err) {
-      res.status(401).json({ message: "Token inválido" });
-    } else {
-      req.id = decoded.id;
-      req.roles = decoded.roles;
-      next();
-    }
-  });
-};
-
-const isAdmin = (req, res, next) => {
-  if (req.roles.indexOf("ADMIN") >= 0) {
-    next();
-  } else {
-    res.status(403).json({ message: "Acesso negado" });
-  }
-};
 
 /**
  * @swagger
@@ -47,7 +20,7 @@ const isAdmin = (req, res, next) => {
  *       - Serviço
  *     parameters:
  *       - in: header
- *         name: authorization
+ *         name: token
  *         required: true
  *         schema:
  *           type: string
@@ -59,7 +32,7 @@ const isAdmin = (req, res, next) => {
  *             schema:
  *               type: object
  */
-servicoApi.get("", checkToken, (req, res) => {
+servicoApi.get("", (req, res) => {
   dbServico.find()
     .then(dados => {
       res.json(dados);
@@ -84,7 +57,7 @@ servicoApi.get("", checkToken, (req, res) => {
  *         schema:
  *           type: string
  *       - in: header
- *         name: authorization
+ *         name: token
  *         required: true
  *         schema:
  *           type: string
@@ -116,7 +89,7 @@ servicoApi.get("/:id", checkToken, (req, res) => {
  *       - Serviço
  *     parameters:
  *       - in: header
- *         name: authorization
+ *         name: token
  *         required: true
  *         schema:
  *           type: string
@@ -166,7 +139,7 @@ servicoApi.post("", checkToken, isAdmin, (req, res) => {
  *         schema:
  *           type: string
  *       - in: header
- *         name: authorization
+ *         name: token
  *         required: true
  *         schema:
  *           type: string
@@ -215,7 +188,7 @@ servicoApi.put("/:id", checkToken, isAdmin, (req, res) => {
  *         schema:
  *           type: string
  *       - in: header
- *         name: authorization
+ *         name: token
  *         required: true
  *         schema:
  *           type: string

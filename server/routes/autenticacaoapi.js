@@ -3,6 +3,7 @@ const autenticacaoApi = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const dbUsuario = require("../models/Usuario");
+const { checkTokenNotLogged } = require("./auth");
 
 /**
  * @swagger
@@ -10,11 +11,6 @@ const dbUsuario = require("../models/Usuario");
  *   name: Autenticação
  *   description: Endpoints relacionados a autenticação
  */
-
-// processa o corpo da requisição e insere os dados recebidos
-// como atributos de req.body
-autenticacaoApi.use(express.json());
-autenticacaoApi.use(express.urlencoded({ extended: true }));
 
 /**
  * @swagger
@@ -25,6 +21,12 @@ autenticacaoApi.use(express.urlencoded({ extended: true }));
  *     description: Login
  *     tags:
  *       - Autenticação
+ *     parameters:
+ *       - in: header
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -44,7 +46,7 @@ autenticacaoApi.use(express.urlencoded({ extended: true }));
  *             schema:
  *               type: object
  */
-autenticacaoApi.post("/login", (req, res) => {
+autenticacaoApi.post("/login", checkTokenNotLogged, (req, res) => {
   const { email, senha } = req.body;
   dbUsuario
     .findOne({ email: email })
@@ -63,6 +65,7 @@ autenticacaoApi.post("/login", (req, res) => {
               res.status(200).json({
                 message: "Autenticação realizada com sucesso",
                 token: token,
+                userId: user._id
               });
           }
         );
@@ -86,6 +89,12 @@ autenticacaoApi.post("/login", (req, res) => {
  *     description: Register
  *     tags:
  *       - Autenticação
+ *     parameters:
+ *       - in: header
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -105,7 +114,7 @@ autenticacaoApi.post("/login", (req, res) => {
  *             schema:
  *               type: object
  */
-autenticacaoApi.post("/register", (req, res) => {
+autenticacaoApi.post("/register", checkTokenNotLogged, (req, res) => {
   const newUser = new dbUsuario({
     nome: req.body.nome,
     email: req.body.email,

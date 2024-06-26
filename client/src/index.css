@@ -1,13 +1,119 @@
-body {
+@import url("https://fonts.googleapis.com/css?family=Barlow:400,500");
+@import "rsuite/dist/rsuite.css";
+
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  font: 400 14px Barlow, sans-serif !important;
+  background: #dee2e6 !important;
+  -webkit-font-smoothing: antialiased !important;
+  overflow: hidden;
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+input,
+button,
+textarea {
+  font: 400 18px Barlow, sans-serif;
+}
+
+button {
+  cursor: pointer;
+}
+
+.rs-anim-fade
+  .rs-anim-in
+  .placement-bottom-start
+  .rs-picker-date-menu
+  .rs-picker-menu {
+  z-index: 99999 !important;
+}
+
+.rs-calendar {
+  z-index: 99999 !important;
+}
+
+.rs-picker-menu {
+  z-index: 99999 !important;
+}
+
+.ant-table-thead .ant-table-cell {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+.ant-pagination-item {
+  border-radius: 4px !important;
+  border: none !important;
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.ant-pagination-item:hover a {
+  color: rgba(0, 0, 0, 0.87) !important;
+  border: rgba(0, 0, 0, 0.04) !important;
+}
+
+.ant-pagination-item-active {
+  border-radius: 4px !important;
+  background-color: #001254 !important;
+}
+
+.ant-pagination-item-active a {
+  border-radius: 4px !important;
+  color: #ffffff !important;
+}
+
+.ant-pagination-item-active:hover a {
+  border-radius: 4px !important;
+  background-color: rgb(0, 12, 58) !important;
+}
+
+.ant-pagination-item-link:hover a {
+  color: rgba(0, 0, 0, 0.87) !important;
+  border: rgba(0, 0, 0, 0.04) !important;
+}
+
+.ant-pagination-jump-next .ant-pagination-jump-next-custom-icon {
+  border-radius: 4px !important;
+  border: none !important;
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.ant-table-tbody {
+  padding: 0 !important;
+}
+.ant-table-tbody > tr > td {
+  padding: 0 !important;
+}
+
+/* Track */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #7c7c7c;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #4b4b4b;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #ecf0f1;
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
 }

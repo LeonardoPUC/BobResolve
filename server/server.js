@@ -2,8 +2,12 @@ require("dotenv").config();
 const express = require("express");
 const path = require('path');
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const app = express();
+
+// Adicionar log para verificar a variável de ambiente
+console.log('MONGO_URI:', process.env.MONGO_URI);
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -18,6 +22,13 @@ const swaggerSetup = require("./swagger");
 const autenticacaoApi = require("./routes/autenticacaoapi");
 const usuarioApi = require("./routes/usuarioapi");
 const servicoApi = require("./routes/servicoapi"); 
+
+// Configuração do CORS
+app.use(cors());
+
+// Middleware para processar JSON e URL-encoded bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/", autenticacaoApi);
 app.use("/api/usuario", usuarioApi);
