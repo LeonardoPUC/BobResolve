@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Container, SubContainer, UserItems, User, TrialPeriodDate, CardPeriodDate, ColoredInfoIcon } from './UserCard.styles'
+import { Container, SubContainer, UserItems, User, TrialPeriodDate, CardPeriodDate } from './UserCard.styles'
 import Avatar from '../Avatar/Avatar'
 import { HiOutlineUser } from 'react-icons/hi'
 import { FiLogOut } from 'react-icons/fi'
@@ -57,18 +57,6 @@ const UserCard = () => {
           <Avatar />
           <Profile color={COLORS.DARK_GREY} />
         </User>
-        {
-          user && user?.trialPeriod && (
-            <CardPeriodDate>
-              <TrialPeriod trialPeriod={user?.trialPeriod} trialPeriodEndDate={user?.trialPeriodEndDate} />
-              <Tooltip title="Você renova o seu acesso cada vez que compra na plataforma Genyx" placement="bottom-start" leaveDelay={600}>
-                <IconButton>
-                  <ColoredInfoIcon />
-                </IconButton>
-              </Tooltip>
-            </CardPeriodDate>
-          )
-        }
         <hr />
         <UserItems>
           <div>
