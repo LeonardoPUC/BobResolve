@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { COLORS } from '../../../../constants/enum'
-import InfoIcon from '@mui/icons-material/Info'
 
 export const Container = styled.div`
   top: 60px;
@@ -61,10 +60,4 @@ export const CardPeriodDate = styled.span`
   align-items: center;
   color:#ffff;
   width:100%;
-`
-
-export const ColoredInfoIcon = styled(InfoIcon)`
-  color: #ffff; 
-  background: #07a707;
-  border-color: #ffff;
 `
