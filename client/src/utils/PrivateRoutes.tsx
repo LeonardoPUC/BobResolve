@@ -17,26 +17,22 @@ const PrivateRoutes = () => {
     (state) => state.userCredentials.userId
   ).toString();
 
-  const user: IProfileItem = useQuery({
-    id: "get-user",
-    url: "/User/GetById",
-    filters: {
-      id: userId,
-    },
-  }).data?.data;
+  const user: IProfileItem = useQuery(
+    {
+      id: 'get-user',
+      url: `/usuario/${userId}`,
+      filters: {}
+    }
+  ).data
 
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   useEffect(() => {
-    if (user && !user.acceptedTerms) {
+    if (user) {
       setMenuOpen(true);
     }
   });
 
   const handleMenuOpen = () => setMenuOpen((prev) => !prev);
-
-  const powerStationRoute = useLocation();
-  const checkPowerStationRoute =
-    powerStationRoute.pathname === "/power-station" ? true : false;
 
   if (auth.token)
   {
@@ -45,7 +41,7 @@ const PrivateRoutes = () => {
       <Header />
       <FlexContainer>
         <Menu open={menuOpen} handleMenuOpen={handleMenuOpen} />
-        <Container open={menuOpen} powerStation={checkPowerStationRoute}>
+        <Container open={menuOpen}>
           <div>
             <Outlet />
           </div>

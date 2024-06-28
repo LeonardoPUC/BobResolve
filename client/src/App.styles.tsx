@@ -1,8 +1,7 @@
 import styled from 'styled-components'
 
 interface IContainer {
-    open: boolean,
-    powerStation: boolean
+    open: boolean
 }
 
 export const Container = styled.div<IContainer>`

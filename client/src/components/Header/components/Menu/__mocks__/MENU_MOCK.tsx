@@ -1,12 +1,35 @@
 import { ICONS_TYPE } from '../../../../../constants/enum'
 
-
 export const MENU_MOCK = {
   headerMenus:
   [
     {
-      id: 22,
-      name: 'Plataforma',
+      id: 1,
+      name: 'Novo Orçamento',
+      icon: ICONS_TYPE.PLATAFORM,
+      subMenu: [],
+      url: ''
+    }
+  ],
+  menus:
+  [ 
+    {
+      id: 2,
+      name: 'Novo Orçamento',
+      icon: ICONS_TYPE.PLATAFORM,
+      subMenu: [],
+      url: ''
+    },
+    {
+      id: 3,
+      name: 'Meus Orçamentos',
+      icon: ICONS_TYPE.PLATAFORM,
+      subMenu: [],
+      url: ''
+    },
+    {
+      id: 4,
+      name: 'Meus Dados',
       icon: ICONS_TYPE.PLATAFORM,
       subMenu: [],
       url: ''
@@ -19,13 +42,5 @@ export const MENU_MOCK = {
     icon: ICONS_TYPE.LOGOUT,
     subMenu: [],
     url: ''
-  },
-  notification:
-  {
-    id: 24,
-    name: 'Notificações',
-    icon: ICONS_TYPE.BELL,
-    subMenu: [],
-    url: 'notifications'
   }
 }

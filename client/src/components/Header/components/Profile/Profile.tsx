@@ -9,17 +9,14 @@ const Profile = (profileProps: IProfile) => {
   const user: IProfileItem = useQuery(
     {
       id: 'get-user',
-      url: '/User/GetById',
-      filters: {
-        id: userId
-      }
+      url: `/usuario/${userId}`,
+      filters: {}
     }
-  ).data?.data
-
+  ).data
 
   return (
     <Container color={profileProps.color}>
-      <Name>{user?.name}</Name>
+      <Name>{user?.nome}</Name>
       <Description>{user?.email}</Description>
     </Container>
   )

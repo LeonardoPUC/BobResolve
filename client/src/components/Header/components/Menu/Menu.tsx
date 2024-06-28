@@ -2,14 +2,12 @@
 import { Container, Content, HeaderMenuContainer, LogoutContainer, OverflowX, UserContainer } from './Menu.styles'
 import MenuItem from '../MenuItem/MenuItem'
 import { FiMenu, FiX } from 'react-icons/fi'
-import { IMenu, IMenuObject } from './Menu.interfaces'
+import { IMenu } from './Menu.interfaces'
 import { MENU_MOCK } from './__mocks__/MENU_MOCK'
 import Avatar from '../Avatar/Avatar'
 import Profile from '../Profile/Profile'
 import { COLORS } from '../../../../constants/enum'
 import { useState } from 'react'
-import { useQuery } from '../../../../services/useQuery'
-import { Badge } from '@mui/material'
 import useAccessKeyStore from '../../../../stores/accessKey'
 
 const Menu = (menuProps: IMenu) => {
@@ -17,12 +15,6 @@ const Menu = (menuProps: IMenu) => {
   const [subMenuOpen, setSubMenuOpen] = useState<number>()
 
   const handleSubMenuOpen = (id: number) => setSubMenuOpen(id === subMenuOpen ? undefined : id)
-
-  const menuObject: IMenuObject[] = useQuery({
-    id: 'get-menu',
-    url: '/Menu/All',
-    filters: {}
-  }).data?.data
 
   return (
     <>
@@ -41,8 +33,7 @@ const Menu = (menuProps: IMenu) => {
         </HeaderMenuContainer>
         <Content>
           {
-            menuObject?.map(menu => {
-              if (!(menu.id === 3)) {
+            MENU_MOCK.menus.map(menu => {
                 return (
                   <MenuItem
                     isSubMenuOpen={subMenuOpen === menu.id}
@@ -52,7 +43,6 @@ const Menu = (menuProps: IMenu) => {
                     isMenuOpen={menuProps.open}
                   />
                 );
-              }
             })
           }
           <HeaderMenuContainer >

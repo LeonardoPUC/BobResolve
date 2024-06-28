@@ -17,7 +17,7 @@ export const SearchContainer = styled.div`
 `
 
 export const Button = styled.button`
-  color: ${COLORS.DARK_BLUE};
+  color: ${COLORS.BRAND_GREY};
   border: 1px solid ${COLORS.LIGHT_GREY};
   border-radius: 0px 4px 4px 0px;
   padding: 8px 10px;

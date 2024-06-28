@@ -17,10 +17,10 @@ export default function NotFound() {
         backgroundColor: primary,
       }}
     >
-      <Typography variant="h1" style={{ color: COLORS.DARK_BLUE }}>
+      <Typography variant="h1" style={{ color: COLORS.BRAND_GREY }}>
         404
       </Typography>
-      <Typography variant="h6" style={{ color: COLORS.DARK_BLUE }}>
+      <Typography variant="h6" style={{ color: COLORS.BRAND_GREY }}>
         A página que você está procurando não existe.
       </Typography>
       <br />

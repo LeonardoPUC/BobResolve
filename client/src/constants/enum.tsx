@@ -89,7 +89,7 @@ export enum COLORS {
   GREY = '#6C757D',
   LIGHT_GREY = '#CED4DA',
   DARK_GREY = '#343A40',
-  DARK_BLUE = '#001254',
+  BRAND_GREY = '#1a2526',
   UNIFORM_GREY = '#A6A6A6',
   LIGHT_BLUE = '#2BA1CF',
   SLATE = '#ADB5BD',
@@ -99,8 +99,8 @@ export enum COLORS {
   GREY_BACKGROUND = '#00000075',
   BLACK = '#000000',
   RED = '#d50000a3',
-  YELLOW = '#ffc414',
-  LIGHT_YELLOW = '#E0A800'
+  YELLOW = '#fec211',
+  LIGHT_YELLOW = '#fff6e5'
 }
 
 export const BREADCRUMB_LINKS = {

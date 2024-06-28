@@ -17,13 +17,13 @@ export default function Error() {
         backgroundColor: primary,
       }}
     >
-      <Typography variant="h1" style={{ color: COLORS.DARK_BLUE }}>
+      <Typography variant="h1" style={{ color: COLORS.BRAND_GREY }}>
         500
       </Typography>
-      <Typography variant="h6" style={{ color: COLORS.DARK_BLUE }}>
+      <Typography variant="h6" style={{ color: COLORS.BRAND_GREY }}>
         OOPS...OCORREU UM ERRO NÃO ESPERADO.
       </Typography>
-      <Typography variant="h6" style={{ color: COLORS.DARK_BLUE }}>
+      <Typography variant="h6" style={{ color: COLORS.BRAND_GREY }}>
         CASO PERSISTA, ENTRE EM CONTATO COM O ADMINISTRADOR DO SISTEMA.
       </Typography>
       <br />

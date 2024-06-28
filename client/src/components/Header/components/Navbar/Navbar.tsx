@@ -55,7 +55,7 @@ const Navbar = () => {
           <Button
             buttonType={BUTTON_TYPE.BORDER_BLUE}
             icon={BsQuestionSquare}
-            text="Central de ajuda"
+            text="Seja um profissional"
             onClick={redirectHelpCenter}
             className="centralAjuda"
           />

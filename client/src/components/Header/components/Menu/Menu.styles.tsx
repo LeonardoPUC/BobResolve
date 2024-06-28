@@ -3,14 +3,14 @@ import { IContainer } from './Menu.interfaces'
 import { COLORS } from './../../../../constants/enum'
 
 export const Container = styled.div<IContainer>`
-  background-color: ${COLORS.DARK_BLUE};
+  background-color: ${COLORS.BRAND_GREY};
   position: -webkit-sticky;
   position: sticky;
   top: 0;
   height: 100vh;
   left: 0;
   z-index: 3;
-  min-width: ${(props) => (props.open ? '360px' : '0px')};
+  min-width: ${(props) => (props.open ? '300px' : '0px')};
   color: ${COLORS.WHITE};
   transition: width ease-in 0.5s;
   overflow-y: scroll;
